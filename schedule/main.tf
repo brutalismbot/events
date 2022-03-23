@@ -44,17 +44,17 @@ resource "random_string" "suffix" {
 ####################
 
 resource "aws_cloudwatch_event_rule" "rule" {
-  description    = var.description
-  event_bus_name = var.event_bus_name
-  event_pattern  = jsonencode(var.pattern)
-  is_enabled     = var.is_enabled
-  name           = var.identifier
+  description         = var.description
+  event_bus_name      = "default"
+  is_enabled          = var.is_enabled
+  name                = "brutalismbot-${var.identifier}"
+  schedule_expression = var.schedule_expression
 }
 
 resource "aws_cloudwatch_event_target" "target" {
   arn            = var.state_machine_arn
   event_bus_name = aws_cloudwatch_event_rule.rule.event_bus_name
-  input_path     = var.input_path
+  input          = jsonencode(var.input)
   role_arn       = aws_iam_role.role.arn
   rule           = aws_cloudwatch_event_rule.rule.name
   target_id      = "state-machine"

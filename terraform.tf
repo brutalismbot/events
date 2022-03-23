@@ -86,28 +86,18 @@ resource "aws_cloudwatch_event_bus" "bus" {
 #   REDDIT :: DEQUEUE   #
 #########################
 
-data "aws_iam_role" "events" {
-  name = "brutalismbot-events"
-}
-
 data "aws_sfn_state_machine" "reddit_dequeue" {
   name = "brutalismbot-reddit-dequeue"
 }
 
-resource "aws_cloudwatch_event_rule" "reddit_dequeue" {
-  description         = "Dequeue next post from /r/brutalism"
-  event_bus_name      = "default"
-  is_enabled          = local.is_enabled.reddit.dequeue
-  name                = "brutalismbot-reddit-dequeue"
-  schedule_expression = "rate(1 hour)"
-}
+module "reddit_dequeue" {
+  source = "./schedule"
 
-resource "aws_cloudwatch_event_target" "reddit_dequeue" {
-  arn       = data.aws_sfn_state_machine.reddit_dequeue.id
-  input     = jsonencode({})
-  role_arn  = data.aws_iam_role.events.arn
-  rule      = aws_cloudwatch_event_rule.reddit_dequeue.name
-  target_id = "state-machine"
+  description         = "Dequeue next post from /r/brutalism"
+  identifier          = "reddit-dequeue"
+  is_enabled          = local.is_enabled.reddit.dequeue
+  schedule_expression = "rate(1 hour)"
+  state_machine_arn   = data.aws_sfn_state_machine.reddit_dequeue.arn
 }
 
 ######################
@@ -360,7 +350,7 @@ output "event_bus" {
 
 output "roles" {
   value = {
-    reddit_dequeue     = null
+    reddit_dequeue     = module.reddit_dequeue.role.name
     reddit_post        = module.reddit_post.role.name
     reddit_reject      = module.reddit_reject.role.name
     reddit_verify      = module.reddit_verify.role.name
@@ -373,7 +363,7 @@ output "roles" {
 
 output "rules" {
   value = {
-    reddit_dequeue     = null
+    reddit_dequeue     = module.reddit_dequeue.rule.name
     reddit_post        = module.reddit_post.rule.name
     reddit_reject      = module.reddit_reject.rule.name
     reddit_verify      = module.reddit_verify.rule.name
