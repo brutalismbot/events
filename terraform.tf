@@ -350,26 +350,88 @@ output "event_bus" {
 
 output "roles" {
   value = {
-    reddit_dequeue     = module.reddit_dequeue.role.name
-    reddit_post        = module.reddit_post.role.name
-    reddit_reject      = module.reddit_reject.role.name
-    reddit_verify      = module.reddit_verify.role.name
-    slack_post         = module.slack_post.role.name
-    slack_post_channel = module.slack_post_channel.role.name
-    slack_uninstall    = module.slack_uninstall.role.name
-    twitter_post       = module.twitter_post.role.name
+    reddit_dequeue = {
+      arn  = module.reddit_dequeue.role.arn
+      name = module.reddit_dequeue.role.name
+    }
+
+    reddit_post = {
+      arn  = module.reddit_post.role.arn
+      name = module.reddit_post.role.name
+    }
+
+    reddit_reject = {
+      arn  = module.reddit_reject.role.arn
+      name = module.reddit_reject.role.name
+    }
+
+    reddit_verify = {
+      arn  = module.reddit_verify.role.arn
+      name = module.reddit_verify.role.name
+    }
+
+    slack_post = {
+      arn  = module.slack_post.role.arn
+      name = module.slack_post.role.name
+    }
+
+    slack_post_channel = {
+      arn  = module.slack_post_channel.role.arn
+      name = module.slack_post_channel.role.name
+    }
+
+    slack_uninstall = {
+      arn  = module.slack_uninstall.role.arn
+      name = module.slack_uninstall.role.name
+    }
+
+    twitter_post = {
+      arn  = module.twitter_post.role.arn
+      name = module.twitter_post.role.name
+    }
   }
 }
 
 output "rules" {
   value = {
-    reddit_dequeue     = module.reddit_dequeue.rule.name
-    reddit_post        = module.reddit_post.rule.name
-    reddit_reject      = module.reddit_reject.rule.name
-    reddit_verify      = module.reddit_verify.rule.name
-    slack_post         = module.slack_post.rule.name
-    slack_post_channel = module.slack_post_channel.rule.name
-    slack_uninstall    = module.slack_uninstall.rule.name
-    twitter_post       = module.twitter_post.rule.name
+    reddit_dequeue = {
+      arn  = module.reddit_dequeue.rule.arn
+      name = module.reddit_dequeue.rule.name
+    }
+
+    reddit_post = {
+      arn  = module.reddit_post.rule.arn
+      name = module.reddit_post.rule.name
+    }
+
+    reddit_reject = {
+      arn  = module.reddit_reject.rule.arn
+      name = module.reddit_reject.rule.name
+    }
+
+    reddit_verify = {
+      arn  = module.reddit_verify.rule.arn
+      name = module.reddit_verify.rule.name
+    }
+
+    slack_post = {
+      arn  = module.slack_post.rule.arn
+      name = module.slack_post.rule.name
+    }
+
+    slack_post_channel = {
+      arn  = module.slack_post_channel.rule.arn
+      name = module.slack_post_channel.rule.name
+    }
+
+    slack_uninstall = {
+      arn  = module.slack_uninstall.rule.arn
+      name = module.slack_uninstall.rule.name
+    }
+
+    twitter_post = {
+      arn  = module.twitter_post.rule.arn
+      name = module.twitter_post.rule.name
+    }
   }
 }
