@@ -50,7 +50,7 @@ locals {
       dequeue = true
       post    = true
       reject  = true
-      verify  = true
+      screen  = true
     }
 
     slack = {
@@ -154,22 +154,22 @@ module "reddit_reject" {
 #   REDDITY :: VERIFY   #
 #########################
 
-data "aws_sfn_state_machine" "reddit_verify" {
-  name = "brutalismbot-reddit-verify"
+data "aws_sfn_state_machine" "reddit_screen" {
+  name = "brutalismbot-reddit-screen"
 }
 
-module "reddit_verify" {
+module "reddit_screen" {
   source = "./eventbridge"
 
   description       = "Verify new posts from Reddit"
   event_bus_name    = aws_cloudwatch_event_bus.bus.name
-  identifier        = "reddit-post-verify"
-  is_enabled        = local.is_enabled.reddit.verify
-  state_machine_arn = data.aws_sfn_state_machine.reddit_verify.arn
+  identifier        = "reddit-post-screen"
+  is_enabled        = local.is_enabled.reddit.screen
+  state_machine_arn = data.aws_sfn_state_machine.reddit_screen.arn
 
   pattern = {
     source      = ["reddit"]
-    detail-type = ["post/slack/verify"]
+    detail-type = ["post/slack/screen"]
   }
 }
 
@@ -365,9 +365,9 @@ output "roles" {
       name = module.reddit_reject.role.name
     }
 
-    reddit_verify = {
-      arn  = module.reddit_verify.role.arn
-      name = module.reddit_verify.role.name
+    reddit_screen = {
+      arn  = module.reddit_screen.role.arn
+      name = module.reddit_screen.role.name
     }
 
     slack_post = {
@@ -409,9 +409,9 @@ output "rules" {
       name = module.reddit_reject.rule.name
     }
 
-    reddit_verify = {
-      arn  = module.reddit_verify.rule.arn
-      name = module.reddit_verify.rule.name
+    reddit_screen = {
+      arn  = module.reddit_screen.rule.arn
+      name = module.reddit_screen.rule.name
     }
 
     slack_post = {
