@@ -56,6 +56,7 @@ locals {
     slack = {
       beta_app_home_opened = true
       beta_enable_disable  = true
+      beta_link_shared     = true
       install              = true
       post                 = true
       post_channel         = true
@@ -218,6 +219,30 @@ module "slack_beta_enable_disable" {
     source      = ["slack/beta"]
     detail-type = ["callback", "POST /callbacks"]
     detail      = { view = { callback_id = ["enable_disable"] } }
+  }
+}
+
+############################
+#   SLACK :: LINK SHARED   #
+############################
+
+data "aws_sfn_state_machine" "slack_beta_link_shared" {
+  name = "brutalismbot-slack-beta-link-shared"
+}
+
+module "slack_beta_link_shared" {
+  source = "./eventbridge"
+
+  description       = "Handle Slack link unfurls"
+  event_bus_name    = aws_cloudwatch_event_bus.bus.name
+  identifier        = "slack-beta-link-shared"
+  is_enabled        = local.is_enabled.slack.beta_link_shared
+  state_machine_arn = data.aws_sfn_state_machine.slack_beta_link_shared.arn
+
+  pattern = {
+    source      = ["slack/beta"]
+    detail-type = ["event", "POST /events"]
+    detail      = { event = { type = ["link_shared"] } }
   }
 }
 
